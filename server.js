@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Session管理 - 存储在内存中,重启服务器后清空
 const activeSessions = new Map(); // { token: { createdAt: timestamp } }
-const SESSION_DURATION = 2 * 24 * 60 * 60 * 1000; // 2天
+const SESSION_DURATION = 10 * 24 * 60 * 60 * 1000; // 10天
 
 // 生成随机token
 function generateToken() {

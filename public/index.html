@@ -1274,12 +1274,26 @@
             'x-session-token': sessionToken
           };
         },
+        // 处理401错误，自动弹出登录框
+        handleUnauthorized() {
+          console.log('⚠️ Session已过期，需要重新登录');
+          localStorage.removeItem('session_token');
+          this.isAuthenticated = false;
+          this.showLoginModal = true;
+        },
         async loadManagedAccounts() {
           try {
             // 从服务器加载账号
             const response = await fetch('/api/server-accounts', {
               headers: this.getAuthHeaders()
             });
+            
+            // 检查401错误
+            if (response.status === 401) {
+              this.handleUnauthorized();
+              return;
+            }
+            
             const accounts = await response.json();
             if (accounts && accounts.length > 0) {
               this.managedAccounts = accounts;
@@ -1297,6 +1311,13 @@
               headers: this.getAuthHeaders(),
               body: JSON.stringify({ accounts: this.managedAccounts })
             });
+            
+            // 检查401错误
+            if (response.status === 401) {
+              this.handleUnauthorized();
+              return;
+            }
+            
             const result = await response.json();
             if (result.success) {
               console.log('✅ 账号已保存到服务器');
@@ -1518,6 +1539,12 @@
                 apiToken: this.newAccount.token
               })
             });
+            
+            // 检查401错误
+            if (response.status === 401) {
+              this.handleUnauthorized();
+              return;
+            }
             
             const data = await response.json();
             
