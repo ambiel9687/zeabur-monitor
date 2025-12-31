@@ -1,0 +1,11 @@
+node_modules/
+.git/
+*.md
+.env
+.env.example
+accounts.json
+accounts.json.example
+password.json
+password.json.example
+sessions/
+.gitignore
